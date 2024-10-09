@@ -936,6 +936,7 @@ var myData = [
 google.charts.load('current', { 'packages': ['corechart'] });
 google.charts.setOnLoadCallback(drawChart1);
 google.charts.setOnLoadCallback(drawChart2);
+google.charts.setOnLoadCallback(drawChart3);
 
 
 function drawChart1() {
@@ -993,6 +994,36 @@ function drawChart2() {
 
     // Draw
     const chart = new google.visualization.ScatterChart(document.getElementById('myChart2'));
+    chart.draw(data, options);
+
+}
+function drawChart3() {
+
+    // Set Data
+    // const data = google.visualization.arrayToDataTable([
+    //     ['Contry', 'Mhl'],
+    //     ['Italy', 55],
+    //     ['France', 49],
+    //     ['Spain', 44],
+    //     ['USA', 24],
+    //     ['Argentina', 15]
+    // ]);
+    let locations= myData.map(
+        function(item){
+            var locAndSize = [ item.BuildingName, parseFloat(item.TotalConsumption)];
+            return locAndSize;
+        }
+    );
+    locations.unshift(['Building Name', 'Consumption']);
+    const data = google.visualization.arrayToDataTable(locations);
+    // Set Options
+    const options = {
+        title: 'Building Consumption',
+        is3D: true
+    };
+
+    // Draw
+    const chart = new google.visualization.PieChart(document.getElementById('myChart3'));
     chart.draw(data, options);
 
 }
