@@ -1,0 +1,17 @@
+.container{
+    padding: 4rem 2rem;
+
+    /* Grid styles */
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    grid-column-gap:5px;
+    grid-row-gap:5px;
+}
+.mychart{
+    display:flex;
+
+}
+h1{
+    text-align: center;
+}
