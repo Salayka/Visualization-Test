@@ -931,25 +931,14 @@ var myData = [
     }
 ]
 
-
-
 google.charts.load('current', { 'packages': ['corechart'] });
-google.charts.setOnLoadCallback(drawChart1);
-google.charts.setOnLoadCallback(drawChart2);
-google.charts.setOnLoadCallback(drawChart3);
+google.charts.setOnLoadCallback(drawBarChart);
+google.charts.setOnLoadCallback(drawScatterPlot);
+google.charts.setOnLoadCallback(drawPieChart);
+google.charts.setOnLoadCallback(drawPieChart2);
 
+function drawBarChart() {
 
-function drawChart1() {
-
-    // Set Data
-    // const data = google.visualization.arrayToDataTable([
-    //     ['Contry', 'Mhl'],
-    //     ['Italy', 55],
-    //     ['France', 49],
-    //     ['Spain', 44],
-    //     ['USA', 24],
-    //     ['Argentina', 15]
-    // ]);
     let locations= myData.map(
         function(item){
             var locAndSize = [item.BuildingName, parseInt(item.BuildingSizeSQFT)];
@@ -964,21 +953,12 @@ function drawChart1() {
     };
 
     // Draw
-    const chart = new google.visualization.BarChart(document.getElementById('myChart'));
+    const chart = new google.visualization.BarChart(document.getElementById('barChart'));
     chart.draw(data, options);
 
 }
-function drawChart2() {
+function drawScatterPlot() {
 
-    // Set Data
-    // const data = google.visualization.arrayToDataTable([
-    //     ['Contry', 'Mhl'],
-    //     ['Italy', 55],
-    //     ['France', 49],
-    //     ['Spain', 44],
-    //     ['USA', 24],
-    //     ['Argentina', 15]
-    // ]);
     let locations= myData.map(
         function(item){
             var locAndSize = [ parseInt(item.BuildingSizeSQFT), parseFloat(item.TotalCost)];
@@ -993,21 +973,12 @@ function drawChart2() {
     };
 
     // Draw
-    const chart = new google.visualization.ScatterChart(document.getElementById('myChart2'));
+    const chart = new google.visualization.ScatterChart(document.getElementById('scatterPlot'));
     chart.draw(data, options);
 
 }
-function drawChart3() {
+function drawPieChart() {
 
-    // Set Data
-    // const data = google.visualization.arrayToDataTable([
-    //     ['Contry', 'Mhl'],
-    //     ['Italy', 55],
-    //     ['France', 49],
-    //     ['Spain', 44],
-    //     ['USA', 24],
-    //     ['Argentina', 15]
-    // ]);
     let locations= myData.map(
         function(item){
             var locAndSize = [ item.BuildingName, parseFloat(item.TotalConsumption)];
@@ -1023,7 +994,44 @@ function drawChart3() {
     };
 
     // Draw
-    const chart = new google.visualization.PieChart(document.getElementById('myChart3'));
+    const chart = new google.visualization.PieChart(document.getElementById('pieChart'));
     chart.draw(data, options);
 
+}
+function drawPieChart2() {
+    let tempData = summarizeConsumptionByCity(myData);
+    const data = google.visualization.arrayToDataTable(tempData);
+    // Set Options
+    const options = {
+        title: 'Building Consumption',
+        is3D: true
+    };
+
+    // Draw
+    const chart = new google.visualization.PieChart(document.getElementById('pieChart2'));
+    chart.draw(data, options);
+
+}
+function summarizeConsumptionByCity(data) {
+    const cityData = {};
+  
+    // Iterate over the array of JSON objects
+    data.forEach(item => {
+      const city = item.AddressCity;
+      const consumption = item.TotalConsumption;
+  
+      // If the city is not in the cityData object, add it
+      if (!cityData[city]) {
+        cityData[city] = 0;
+      }
+  
+      // Add the consumption to the city's total
+      cityData[city] += parseFloat(consumption);
+    });
+  
+    // Convert the cityData object to a 2D array
+    const result = Object.entries(cityData).map(([city, totalConsumption]) => [city, totalConsumption]);
+    result.unshift(['City', 'Consumption'])
+    console.log(result);
+    return result;
 }
